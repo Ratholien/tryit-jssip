@@ -1,0 +1,11 @@
+{
+    "hosting": {
+      "site": "clay-hackaton-client",  
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  }

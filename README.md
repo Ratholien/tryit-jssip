@@ -25,8 +25,8 @@ $ npm install -g gulp-cli
   * `gulp prod` generates the app in production/minified mode.
   * `gulp dev` generates the app in development mode.
   * `gulp live` generates the app in development mode, opens the local website and watches for changes in the source code.
-
-* Once built, the `out/` directory is created with all the HTML, CSS and JavaScript files to be deployed in your own server.
+* `firebase deploy --only hosting:clay-hackaton-client  ` to deploy to firebase 
+* Once built, the `public/` directory is created with all the HTML, CSS and JavaScript files to be deployed in your own server.
 
 
 ## Hardcoded settings
