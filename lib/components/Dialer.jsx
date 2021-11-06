@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Select from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import classnames from 'classnames';
@@ -9,23 +11,25 @@ import UserChip from './UserChip';
 
 const logger = new Logger('Dialer');
 
-export default class Dialer extends React.Component
-{
-	constructor(props)
-	{
+const Placeholder = ({ children }) => {
+
+	return <div>{children}</div>;
+};
+export default class Dialer extends React.Component {
+	constructor(props) {
 		super(props);
 
 		this.state =
 		{
-			uri : props.callme || ''
+			uri: props.callme || ''
 		};
 	}
 
-	render()
-	{
+	render() {
 		const state = this.state;
 		const props = this.props;
 		const settings = props.settings;
+		const selectedClient = null;
 
 		return (
 			<div data-component='Dialer'>
@@ -43,15 +47,33 @@ export default class Dialer extends React.Component
 					action=''
 					onSubmit={this.handleSubmit.bind(this)}
 				>
+
 					<div className='uri-container'>
-						<TextField
-							hintText='SIP URI or username'
-							fullWidth
-							disabled={!this._canCall()}
-							value={state.uri}
-							onChange={this.handleUriChange.bind(this)}
-						/>
+						<If condition={settings.sip_users != null}>
+							<select
+								value={state.uri}
+								onChange={this.handleUriChange.bind(this)}
+								fullWidth
+								disabled={!this._canCall()}
+							>
+								<option value="" selected>Select who you want to call</option>
+								{settings.sip_users.map((option) => (
+									<option value={option.sip_id}>{option.name}</option>
+								))}
+							</select>
+						</If>
+
+						<If condition={settings.sip_users == null}>
+							<TextField
+								hintText='SIP URI or username'
+								fullWidth
+								disabled={!this._canCall()}
+								value={state.uri}
+								onChange={this.handleUriChange.bind(this)}
+							/>
+						</If>
 					</div>
+
 
 					<RaisedButton
 						label='Call'
@@ -59,18 +81,22 @@ export default class Dialer extends React.Component
 						disabled={!this._canCall() || !state.uri}
 						onClick={this.handleClickCall.bind(this)}
 					/>
+
 				</form>
 			</div>
 		);
 	}
 
-	handleUriChange(event)
-	{
+	handleUriChange(event) {
+		console.log("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
+		console.log(this.selectedClient);
+		console.log("kjhvbkgkhbgkugukygb");
+		console.log(event.target.value);
+		console.log("kjhvbkgkhbgkugukygb");
 		this.setState({ uri: event.target.value });
 	}
 
-	handleSubmit(event)
-	{
+	handleSubmit(event) {
 		logger.debug('handleSubmit()');
 
 		event.preventDefault();
@@ -81,15 +107,14 @@ export default class Dialer extends React.Component
 		this._doCall();
 	}
 
-	handleClickCall()
-	{
+	handleClickCall() {
+		console.log(item);
 		logger.debug('handleClickCall()');
 
-		this._doCall();
+		this._doCall(item);
 	}
 
-	_doCall()
-	{
+	_doCall() {
 		const uri = this.state.uri;
 
 		logger.debug('_doCall() [uri:"%s"]', uri);
@@ -98,8 +123,7 @@ export default class Dialer extends React.Component
 		this.props.onCall(uri);
 	}
 
-	_canCall()
-	{
+	_canCall() {
 		const props = this.props;
 
 		return (
@@ -111,9 +135,9 @@ export default class Dialer extends React.Component
 
 Dialer.propTypes =
 {
-	settings : PropTypes.object.isRequired,
-	status   : PropTypes.string.isRequired,
-	busy     : PropTypes.bool.isRequired,
-	callme   : PropTypes.string,
-	onCall   : PropTypes.func.isRequired
+	settings: PropTypes.object.isRequired,
+	status: PropTypes.string.isRequired,
+	busy: PropTypes.bool.isRequired,
+	callme: PropTypes.string,
+	onCall: PropTypes.func.isRequired
 };
